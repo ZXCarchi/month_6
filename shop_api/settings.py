@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from datetime import timedelta
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET')
+SECRET_KEY = 'django@secret13354544532y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.environ.get('DEBUG') == 'on' else False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -152,7 +155,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = [
+    'users.CustomUser'
+    'user.User'
+                   ]
 
 
 SWAGGER_SETTINGS = {
@@ -179,6 +185,7 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True, # выдаёт новый refresh при обновлении
     "BLACKLIST_AFTER_ROTATION": True, # старый refresh добавляется в чёрный список
     "UPDATE_LAST_LOGIN": True, # обновляет время последнего входа
+    "TOKEN_OBTAIN_SERIALIZER": 'user.serializers.CustomTokenObtainPairSerializer', # путь к сериализатору для получения токена
 
     "ALGORITHM": "HS256", # Алгоритм шифрования
     "SIGNING_KEY": os.environ.get('SECRET'), # Ключ для подписи токена

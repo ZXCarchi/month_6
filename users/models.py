@@ -1,6 +1,16 @@
 from django.db import models
 # from django.contrib.auth.models import User
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import (
+    BaseUserManager, 
+    AbstractBaseUser, 
+    PermissionsMixin, 
+    AbstractUser
+    )
+
+
+
+class User(AbstractUser):
+    birthday = models.DateField(null=True, blank=True)         
 
 
 class CustomUserManager(BaseUserManager):

@@ -19,6 +19,17 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from users.serializers import CustomTokenObtainPairSerializer
+from .permissions import IsEighteen
+
+
+class SomePrivateAPIView(APIView):
+    permission_classes = [IsEighteen]
+
+    def get(self, request):
+        return Response(
+            status=status.HTTP_200_OK,
+            data={'message': 'You are allowed to see this!'}
+        )
 
 class AuthorizationAPIView(CreateAPIView):
     serializer_class = AuthValidateSerializer

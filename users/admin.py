@@ -1,16 +1,18 @@
 from django.contrib import admin
-from .models import Category, Product, Review
+from django.contrib.auth.admin import UserAdmin
+# Register your models here.
+from .models import CustomUser, ConfirmationCode
 
-class ReviewInline(admin.TabularInline):
-    model = Review
-    extra = 1
+@admin.register(CustomUser)
+class CustomUserAdmin(UserAdmin):
+    list_display = ('id','username', 'email','is_staff', 'is_active')
+    fieldsets = (
+        (None, {'fields': ('email', 'password', 'is_staff', 'is_active')}),
+        ('Personal info', {'fields': ('username', 'first_name', 'last_name')}),
+        ('Date information', {'fields': ('last_login',)}),
+    )
+    list_editable = ("is_active",)
 
-class ProductAdmin(admin.ModelAdmin):
-    inlines = [ReviewInline]
-    search_fields = ['title']
-    list_filter = ['price', 'category']
-    list_display = ['title', 'price', 'category']
-    list_editable = ['price']
-
-admin.site.register(Category)
-admin.site.register(Product, ProductAdmin)
+@admin.register(ConfirmationCode)
+class ConfirmationCodeAdmin(admin.ModelAdmin):
+    pass
