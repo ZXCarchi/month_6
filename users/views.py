@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import CreateAPIView
 from users.models import CustomUser
+from users.utils import get_confirmation_code, save_confirmation_code
 from .serializers import (
     RegisterValidateSerializer,
     AuthValidateSerializer,
@@ -123,3 +124,33 @@ class ConfirmUserAPIView(APIView):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
+class SendConfirmationCodeView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        if not email:
+            return Response({'error': 'Email обязателен'}, status=400)
+
+        code = str(random.randint(100000, 999999))
+        save_confirmation_code(email, code)
+
+        # тут отправка на почту (имитация)
+        print(f"Код подтверждения для {email}: {code}")
+
+        return Response({'message': 'Код отправлен'})
+    
+
+class VerifyCodeView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        code = request.data.get('code')
+
+        if not email or not code:
+            return Response({'error': 'Email и код обязательны'}, status=400)
+
+        real_code = get_confirmation_code(email)
+        if real_code == code:
+            return Response({'message': 'Код подтвержден'})
+        else:
+            return Response({'error': 'Неверный код'}, status=400)

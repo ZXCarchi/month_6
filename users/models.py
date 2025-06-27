@@ -7,10 +7,7 @@ from django.contrib.auth.models import (
     AbstractUser
     )
 
-
-
-class User(AbstractUser):
-    birthday = models.DateField(null=True, blank=True)         
+            
 
 
 class CustomUserManager(BaseUserManager):
@@ -44,6 +41,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=150)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    birthday = models.DateField(null=True, blank=True) 
 
     objects = CustomUserManager()
 
